@@ -123,7 +123,7 @@ python main.py
 | `DB_PORT` | Port number | `5432` |
 | `DB_NAME` | Database name | `dvdrental` |
 | `DB_USER` | DB user | `postgres` |
-| `DB_PASSWORD` | User password (required) | `devd7180` |
+| `DB_PASSWORD` | User password (required) | `chrisgayle` |
 | `OUTPUT_DIR` | Folder for generated workbook (auto-created) | `output/` |
 | `OUTPUT_FILE` | Full path of the Excel file | `output/sql_exercise_outputs.xlsx` |
 
