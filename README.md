@@ -223,7 +223,4 @@ Workbook: sql_exercise_outputs.xlsx
 ## License
 MIT License – feel free to use, modify, and distribute.
 
-## Author
-**Dadhania Dev** – Senior Software Engineer & Data Engineer
-GitHub: [PS-Dev-Dadhania](https://github.com/PS-Dev-Dadhania)
-LinkedIn: https://linkedin.com/in/devdadhania
+
