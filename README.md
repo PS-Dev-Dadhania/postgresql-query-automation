@@ -1,95 +1,57 @@
-# PostgreSQL Query Automation & Excel Report Generator
+# PostgreSQL Studio Workspace & Report Generator
 
 ## Short Description
-A production-grade Python utility that connects to the **dvdrental** PostgreSQL database, executes all 15 SQL exercise queries, and consolidates each result set into its own styled worksheet within a single Excel workbook (`sql_exercise_outputs.xlsx`). The tool is built with pure Python, using `psycopg2` for database interactions and `openpyxl` for high-quality Excel generation, and follows a clean, modular architecture suitable for open-source distribution.
+A premium, production-grade desktop-like web application and SQL Studio Client that connects to a **dvdrental** PostgreSQL database. It allows developers, analysts, and DBAs to manually type, execute, and preview SQL exercise queries (Q1 to Q15), explore schemas, and compile successful datasets into a single professionally styled Excel workbook (`sql_exercise_outputs.xlsx`).
 
-## Business Problem
-Data analysts and DBAs often spend valuable time manually running repetitive SQL queries and copying results into spreadsheets for reporting. This manual workflow is error-prone, hard to audit, and does not scale. The project automates the entire pipeline—query execution, result capture, and polished Excel export—so that stakeholders receive a repeatable, consistent workbook with minimal effort.
+---
 
 ## Features
-- **PostgreSQL connectivity** via `psycopg2` with a context-manager for safe connection handling
-- **15 predefined SQL exercises** covering analytics, CTEs, materialized views, temp tables, etc.
-- **Modular Python architecture** (`config`, `db`, `queries`, `excel_export`, `main`)
-- **Automatic Excel workbook generation** – one worksheet per query
-- **Professional styling** (header fill, fonts, borders, frozen top row, auto-sized columns)
-- **Robust logging** to console and `execution.log` (INFO, DEBUG, ERROR)
-- **Graceful error handling** – each failing query gets an error sheet while the workflow continues
-- **Environment-driven configuration** (`.env`) with validation
-- **Progress feedback** via `tqdm` progress bar
-- **Production-ready folder layout** with `.gitignore`, `requirements.txt`, and documentation
+- **IDE-grade Desktop Experience** – Inspired by tools like **DataGrip**, **DBeaver**, and **VS Code**.
+- **Collapsible Schema Explorer** – Collapsible tree node visualization showing all tables and columns (with data types) dynamically fetched from PostgreSQL.
+- **Exercises Catalog Sidebar** – Direct navigation for exercises Q1 to Q15 with progress state tracking (○ Pending, ✓ Success, ✕ Failed).
+- **Monaco SQL Editor Workspace** – Advanced editor featuring syntax highlighting, line numbers, autocomplete, reset templates, and draft auto-saving.
+- **Interactive Results Grid** – Professional datagrid supporting horizontal/vertical scrolling, sortable columns, CSV export, and DBeaver-style multi-cell copying to clipboard.
+- **Troubleshooting & Error Diagnostics** – Explains SQL syntax or schema errors with exact locations and troubleshooting tips.
+- **Active Operations Dashboard** – Real-time progress stats, completion rate bar, database configuration summaries, and query executions telemetry.
+- **Excel Report Builder** – Compiles successfully executed query sheets into a beautifully styled spreadsheet (using Segoe UI fonts, steel-blue fills, thin borders, numbers formats, and auto-adjusted column dimensions). Skips unexecuted or empty questions.
+- **Theme Options** – Instant toggling between Dark Theme (DataGrip inspired) and Light Theme (Clean Studio inspired).
+
+---
 
 ## Technologies Used
 | Technology | Role |
 |------------|------|
-| **Python 3.x** | Core language |
+| **Python 3.x** | Backend core server |
+| **Flask** | REST API endpoints provider & static assets server |
 | **psycopg2** | PostgreSQL driver |
-| **openpyxl** | Excel workbook creation & styling |
-| **python-dotenv** | Loads `.env` configuration |
-| **logging** | Structured application logs |
-| **pathlib** | OS-independent path handling |
-| **tqdm** | CLI progress bar |
+| **openpyxl** | Excel report compilation and cell formatting |
+| **Monaco Editor (CDN)** | IDE-grade SQL editor |
+| **Vanilla HTML5 & CSS3** | Custom-themed layout styling |
+| **pathlib** | OS-independent directory paths resolver |
+
+---
 
 ## Project Structure
 ```
 SQL/
-├── .env.example          # Template for required DB credentials
-├── .gitignore            # Excludes .env, logs, output, caches
-├── README.md             # ← this file
-├── config.py             # Loads & validates environment variables
-├── db.py                 # Context manager for DB connections
-├── excel_export.py       # Workbook creation, styling, and save logic
-├── main.py               # Orchestrates query execution & reporting
-├── queries.py            # Registry of 15 SQL exercise definitions
-├── requirements.txt      # Project dependencies
-├── execution.log         # Runtime log (generated)
+├── static/
+│   ├── index.html        # Main interface dashboard structure
+│   ├── style.css         # VSCode/DataGrip custom stylesheets (Light + Dark)
+│   ├── app.js            # Client-side routing, tree render, grid, and compiler triggers
+├── config.py             # Loads & validates environment configuration
+├── db.py                 # Handles connection pooling & transaction states
+├── queries.py            # Predefined query objective templates and solutions metadata
+├── excel_export.py       # Openpyxl styles compiling and excel workbook saving
+├── main.py               # Flask application server endpoints
+├── requirements.txt      # Project library dependencies list
 └── output/
-    └── sql_exercise_outputs.xlsx   # Generated Excel report
+    └── sql_exercise_outputs.xlsx   # Generated styled Excel report
 ```
 
-## Architecture
-```mermaid
-flowchart TD
-    A["Run main.py"] --> B["Load Environment Variables"]
-    B --> C["Validate Configuration"]
-    C --> D["Open Database Connection"]
-    D --> E["Iterate Over Queries"]
-    E --> F["Execute SQL Statements"]
-    F --> G["Fetch Headers and Rows"]
-    G --> H["Export Query Results to Sheet"]
-    H --> I["Style Worksheet Cells"]
-    I --> J{"All Queries Processed?"}
-    J -->|Yes| K["Save Styled Workbook"]
-    K --> L["Display Execution Summary"]
-    J -->|No| E
-```
+---
 
-## Execution Workflow
-```mermaid
-sequenceDiagram
-    participant User as "User"
-    participant Script as "Main Script"
-    participant Config as "Config Manager"
-    participant DB as "Database Connection"
-    participant Queries as "Queries Registry"
-    participant Excel as "Excel Export"
+## Installation & Setup
 
-    User->>Script: Run main.py
-    Script->>Config: Load environment variables
-    Config-->>Script: Configuration validated
-    Script->>DB: Open database connection
-    DB-->>Script: Connection active
-    loop For each query
-        Script->>Queries: Get query definition
-        Queries-->>Script: SQL statements
-        Script->>DB: Execute SQL statements
-        DB-->>Script: Results fetched
-        Script->>Excel: Export results to sheet
-    end
-    Script->>Excel: Save workbook
-    Script->>User: Display execution summary
-```
-
-## Installation
 ```bash
 # 1. Clone the repository
 git clone https://github.com/PS-Dev-Dadhania/postgresql-query-automation.git
@@ -100,7 +62,7 @@ python -m venv .venv
 source .venv/Scripts/activate   # Windows PowerShell
 # or: .venv\Scripts\activate.bat
 
-# 3. Install dependencies
+# 3. Install requirements
 pip install -r requirements.txt
 
 # 4. Prepare environment variables
@@ -110,12 +72,10 @@ cp .env.example .env
 # DB_PORT=5432
 # DB_NAME=dvdrental
 # DB_USER=postgres
-# DB_PASSWORD=devd7180   # <-- your password
-
-# 5. Run the tool
-python main.py
+# DB_PASSWORD=devd7180   # <-- your database password
 ```
 
+<<<<<<< HEAD
 ## Configuration
 | Variable | Description | Example |
 |----------|-------------|---------|
@@ -126,102 +86,32 @@ python main.py
 | `DB_PASSWORD` | User password (required) | `chrisgayle` |
 | `OUTPUT_DIR` | Folder for generated workbook (auto-created) | `output/` |
 | `OUTPUT_FILE` | Full path of the Excel file | `output/sql_exercise_outputs.xlsx` |
+=======
+---
+>>>>>>> e311478 (Redesign: Premium SQL Studio Workspace & Enhanced Excel Reports)
 
-**`.env.example`** provides the required keys; copy it to `.env` and fill in values before running.
+## Running the Application
 
-## Usage
 ```bash
 python main.py
 ```
-The script prints a progress bar, logs each step, and finally displays a summary like:
-```
-==================================================
-              EXECUTION SUMMARY
-==================================================
-Queries executed : 15
-Successful       : 14
-Failed           : 1
-Excel saved      : output/sql_exercise_outputs.xlsx
-Execution Time   : 4.37 seconds
-==================================================
-```
-The generated workbook contains one worksheet per query (`Q1` … `Q15`). Each sheet includes a header row, typed data rows, and consistent styling (blue header fill, thin gray borders, auto-sized columns, frozen top row).
+This runs the local server on `http://127.0.0.1:5000/` and automatically launches a new browser tab. 
 
-## Output Details
-- **Workbook**: `output/sql_exercise_outputs.xlsx`
-- **Worksheet naming**: Query IDs (`Q1`, `Q2`, … `Q15`)
-- **Header row**: Styled with `Segoe UI` 11 pt, bold, blue fill (`#DCE6F1`), thin gray borders.
-- **Data rows**: `Segoe UI` 10 pt, right-aligned for numbers, centered for dates, left-aligned for strings.
-- **Number formatting**: `#,##0` for integers, `#,##0.00` for floats.
-- **Date formatting**: `yyyy-mm-dd`
-- **Column width**: Dynamic (max 50 characters, minimum 12 characters).
+### Core Workflows
 
-If a query fails, an error sheet is still created with columns `Error Status` & `Message`.
+1. **Establish DB Connection**: Head to the **Database** tab, input connection details (pre-filled from `.env`), test connection, and click **Connect**.
+2. **Execute Queries**: Navigate to the **Workspace** tab. Choose any exercise (Q1-Q15) in the Exercises Catalog, write or load standard solutions template inside the Monaco Editor, and hit **Run Query** (or press `Ctrl+Enter` / `F5`).
+3. **Analyze Results**: Review columns headers in the resizable Results Grid, sort tables, copy selected cell blocks, or export results directly as a CSV document.
+4. **Build Excel Reports**: Head to the **Export** tab and click **Compile & Save Excel Document** to compile all query worksheet results.
+
+---
 
 ## Error Handling
-| Failure Type | Handling |
-|--------------|----------|
-| **Missing `.env` variables** | `config.validate_config()` raises `ValueError` -> program aborts with clear message. |
-| **Database connection error** | Logged as `CRITICAL`; program exits (`sys.exit(1)`). |
-| **SQL execution error** | Caught per-query, transaction rolled back, error details written to an Excel sheet, and processing continues. |
-| **File-system errors** (e.g., permission) | Propagated as exceptions; logged with stack trace. |
-| **Unexpected runtime error** | Captured at the highest level, logged, and the script exits gracefully. |
+- **Database Connection**: Validated on parameters test connection. Reports clean stack logs if server auth fails (e.g. invalid password).
+- **SQL Execution**: isolated transaction blocks ensure errors roll back the database transaction block gracefully without closing the active connection. Error diagnostics present clean descriptions in the details drawer.
+- **Workbook Saving**: Validates that worksheets are populated with active rows datasets. Unexecuted queries are dynamically skipped from compile payloads.
 
-All logs are written to `execution.log` (DEBUG-level) and echoed to the console (INFO-level).
-
-## Future Improvements
-- **CSV export** as an alternative lightweight format.
-- **CLI arguments** for selecting a subset of queries or output location.
-- **Docker container** for reproducible environments.
-- **GitHub Actions CI** to run unit tests on every push.
-- **Unit tests** with `pytest` and fixtures for mocking PostgreSQL.
-- **Configurable styling** (themes, custom fonts).
-- **Integration with Airflow / Prefect** for scheduled runs.
-
-## Skills Demonstrated
-- **Python engineering** (type hints, pathlib, context managers)
-- **SQL & PostgreSQL** (DDL/DML, CTEs, materialized views, temp tables)
-- **Database automation** (connection pooling, transaction control)
-- **Excel automation** (openpyxl styling, dynamic column sizing)
-- **Error handling & logging** (structured logs, graceful degradation)
-- **Configuration management** (dotenv, validation)
-- **Open-source best practices** (README, .gitignore, requirements, modular code)
-
-## Screenshots (placeholders)
-| Description | Image |
-|-------------|-------|
-| Folder structure | ![Folder structure](placeholder_image.png) |
-| Sample worksheet (styled) | ![Excel sheet](placeholder_image.png) |
-| Console execution with progress bar | ![Console output](placeholder_image.png) |
-
-> **Note:** Replace `placeholder_image.png` with actual screenshots when preparing the final repo release.
-
-## Example Output (worksheet list)
-```
-Workbook: sql_exercise_outputs.xlsx
- ├─ Q1 – High Rental Rate Films
- ├─ Q2 – Top 10 High Paying Customers
- ├─ Q3 – Film Categories Revenue
- ├─ Q4 – Top 10 Most Rented Films
- ├─ Q5 – Average Rental Duration by Rating
- ├─ Q6 – Top Actors with Over 35 Films
- ├─ Q7 – Unreturned Rentals List
- ├─ Q8 – Customer Rental Summary View
- ├─ Q9 – Film Revenue Materialized View
- ├─ Q10 – High-Value Customers Temp Table
- ├─ Q11 – Actor Film Count CTE
- ├─ Q12 – Rank Films within Categories
- ├─ Q13 – Customers by Country
- ├─ Q14 – Staff Performance Analysis
- ├─ Q15 – Monthly Revenue Trends
-```
-
-## Performance
-- **Execution time:** ~4 seconds on a typical local PostgreSQL 18 instance (15 queries, ~2 k rows total).
-- **Memory footprint:** Minimal; only the workbook object (~1 MB) resides in memory.
-- **Scalability:** Adding more queries only grows linearly; each query runs in its own transaction, preventing cascade failures.
+---
 
 ## License
 MIT License – feel free to use, modify, and distribute.
-
-

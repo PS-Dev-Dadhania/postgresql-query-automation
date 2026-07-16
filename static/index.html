@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Workspace Studio</title>
+    <!-- Google Fonts for UI and Monospace -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- RequireJS for Monaco Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- 1. Narrow Left Navigation Sidebar (VS Code Style) -->
+        <aside class="sidebar-nav">
+            <div class="nav-brand" title="SQL Studio Workspace">
+                <svg class="brand-icon-svg" viewBox="0 0 16 16" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M8 1v14M1 8h14M1 4.5h14M1 11.5h14"/>
+                </svg>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard" title="Dashboard">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M2 2h6v6H2V2zm1 1v4h4V3H3zm5-1h6v6H8V2zm1 1v4h4V3H9zM2 8h6v6H2V8zm1 1v4h4V9H3zm5-1h6v6H8V8zm1 1v4h4V9H9z"/>
+                    </svg>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="database" title="Database connection">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 1C3.58 1 0 2.12 0 3.5v9c0 1.38 3.58 2.5 8 2.5s8-1.12 8-2.5v-9C16 2.12 12.42 1 8 1zm7 2.5c0 .59-2.73 1.5-7 1.5S1 4.09 1 3.5s2.73-1.5 7-1.5 7 .91 7 1.5zM1 5.34c.59.32 1.63.66 3 .89V8.5c0-.85-.56-1.54-1.25-2-.66-.44-1.25-.85-1.75-1.16zm5 1.13c.61.1 1.29.15 2 .15s1.39-.05 2-.15v2.24c-.61-.1-1.29-.15-2-.15s-1.39.05-2 .15V6.47zm5-.24c1.37-.23 2.41-.57 3-.89v1.16c-.5.31-1.09.72-1.75 1.16-.69.46-1.25 1.15-1.25 2V6.23zm3 2.27c-.5.31-1.09.72-1.75 1.16-.69.46-1.25 1.15-1.25 2v-1.92c1.37-.23 2.41-.57 3-.89v1.65zm-8 0v1.65c-.69-.46-1.25-1.15-1.25-2v1.92c.5.31 1.09.72 1.75 1.16zm5-.15v2.24c-.61-.1-1.29-.15-2-.15s-1.39.05-2 .15v-2.24c.61.1 1.29.15 2 .15s1.39-.05 2-.15zM1 9c0 .24.16.53.48.86.32.32.79.67 1.38 1A16.03 16.03 0 0 0 8 12c1.88 0 3.73-.39 5.14-1.14.59-.33 1.06-.68 1.38-1 .32-.33.48-.62.48-.86v1c0 .24-.16.53-.48.86-.32.32-.79.67-1.38 1A16.03 16.03 0 0 0 8 13c-1.88 0-3.73-.39-5.14-1.14-.59-.33-1.06-.68-1.38-1-.32-.33-.48-.62-.48-.86V9zm0 3c0 .24.16.53.48.86.32.32.79.67 1.38 1A16.03 16.03 0 0 0 8 15c1.88 0 3.73-.39 5.14-1.14.59-.33 1.06-.68 1.38-1 .32-.33.48-.62.48-.86v1c0 .24-.16.53-.48.86-.32.32-.79.67-1.38 1A16.03 16.03 0 0 0 8 16c-1.88 0-3.73-.39-5.14-1.14-.59-.33-1.06-.68-1.38-1-.32-.33-.48-.62-.48-.86v-1z"/>
+                    </svg>
+                    <span class="nav-label">Database</span>
+                </button>
+                <button class="nav-item" data-tab="queries" title="SQL Workspace">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11zM2.5 2a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5h-11zm1 3h9V4h-9v1zm0 3h9V7h-9v1zm0 3h5v-1h-5v1z"/>
+                    </svg>
+                    <span class="nav-label">Workspace</span>
+                </button>
+                <button class="nav-item" data-tab="export-panel" title="Export workbook">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    <span class="nav-label">Export</span>
+                </button>
+                <button class="nav-item" data-tab="settings" title="Settings">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                    <span class="nav-label">Settings</span>
+                </button>
+                <button class="nav-item" data-tab="about" title="About">
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                    <span class="nav-label">About</span>
+                </button>
+            </nav>
+            
+            <div class="nav-footer">
+                <div class="status-indicator-bar" title="Connection Status">
+                    <span class="status-dot disconnected"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 2. Main Workspace Layout -->
+        <main class="main-content">
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="tab-view active">
+                <header class="view-header">
+                    <div class="header-title">
+                        <h2>Workspace Dashboard</h2>
+                        <span class="header-subtitle">Status overview and exercise tracking</span>
+                    </div>
+                </header>
+                <div class="view-body scrollable">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">Database connection</span>
+                            <span class="metric-value" id="dash-db-name">Disconnected</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Completion percentage</span>
+                            <div class="metric-value-row">
+                                <span class="metric-value" id="dash-completion-rate">0%</span>
+                                <span class="metric-sub" id="dash-completed-count">0 / 15</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="dash-progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Pending tasks</span>
+                            <span class="metric-value" id="dash-pending-count">15</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Excel workbook status</span>
+                            <span class="metric-value text-secondary" id="dash-workbook-status">Not Generated</span>
+                        </div>
+                    </div>
+
+                    <div class="section-container">
+                        <h3>SQL Exercises Progress</h3>
+                        <div class="activity-table-container">
+                            <table class="activity-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">Exercise</th>
+                                        <th>Question Title</th>
+                                        <th style="width: 140px;">Status</th>
+                                        <th style="width: 120px;">Rows Returned</th>
+                                        <th style="width: 120px;">Execution Time</th>
+                                        <th>Last Run</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-table-body">
+                                    <!-- Dynamic rows loaded via js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: DATABASE CONNECTION (DataGrip Style setup) -->
+            <div id="view-database" class="tab-view">
+                <header class="view-header">
+                    <div class="header-title">
+                        <h2>Database Connection</h2>
+                        <span class="header-subtitle">Configure PostgreSQL server settings</span>
+                    </div>
+                </header>
+                <div class="view-body scrollable">
+                    <div class="db-setup-container">
+                        <div class="db-form-panel">
+                            <h3>Connection Parameters</h3>
+                            <div class="form-grid">
+                                <div class="form-group span-8">
+                                    <label for="db-host">Host Address</label>
+                                    <input type="text" id="db-host" value="localhost" placeholder="e.g. localhost or 127.0.0.1">
+                                </div>
+                                <div class="form-group span-4">
+                                    <label for="db-port">Port</label>
+                                    <input type="text" id="db-port" value="5432" placeholder="5432">
+                                </div>
+                                <div class="form-group span-12">
+                                    <label for="db-name">Database Name</label>
+                                    <input type="text" id="db-name" value="dvdrental" placeholder="e.g. dvdrental">
+                                </div>
+                                <div class="form-group span-6">
+                                    <label for="db-user">Username</label>
+                                    <input type="text" id="db-user" value="postgres" placeholder="postgres">
+                                </div>
+                                <div class="form-group span-6">
+                                    <label for="db-password">Password</label>
+                                    <input type="password" id="db-password" value="" placeholder="Database password">
+                                </div>
+                            </div>
+                            
+                            <div class="db-action-bar">
+                                <button id="btn-test-conn" class="btn btn-secondary">Test Connection</button>
+                                <button id="btn-connect" class="btn btn-primary">Connect</button>
+                            </div>
+                        </div>
+
+                        <div class="db-status-panel">
+                            <h3>Current Connection Status</h3>
+                            <div class="status-card-box disconnected" id="db-status-card">
+                                <div class="status-header-row">
+                                    <span class="status-indicator-dot"></span>
+                                    <strong id="db-status-title">Disconnected</strong>
+                                </div>
+                                <p id="db-status-msg">Database is currently offline. Input connection parameters on the left and click 'Connect' to establish a connection to PostgreSQL.</p>
+                                <div class="status-meta-details" id="db-status-details" style="display: none;">
+                                    <hr>
+                                    <div class="status-meta-item"><span>Active Host:</span> <span id="active-meta-host">-</span></div>
+                                    <div class="status-meta-item"><span>Active Port:</span> <span id="active-meta-port">-</span></div>
+                                    <div class="status-meta-item"><span>Active DB:</span> <span id="active-meta-db">-</span></div>
+                                    <div class="status-meta-item"><span>Active User:</span> <span id="active-meta-user">-</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: QUERIES WORKSPACE (Main workbench) -->
+            <div id="view-queries" class="tab-view">
+                <div class="workspace-layout">
+                    <!-- Left Sidebar (Collapsible pane: Exercises + Schema Tree) -->
+                    <aside class="workspace-sidebar">
+                        
+                        <!-- Top Sub-Section: SQL Exercises List -->
+                        <div class="ws-sidebar-section exercises-section">
+                            <div class="ws-section-header">
+                                <h4>Exercises Catalog</h4>
+                                <span class="badge" id="completed-badge">0/15</span>
+                            </div>
+                            <div class="ws-search-box">
+                                <input type="text" id="exercise-search" placeholder="Filter exercises...">
+                            </div>
+                            <div class="query-list" id="query-list-container">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                        
+                        <!-- Resizable splitter inside sidebar -->
+                        <div class="sidebar-inner-splitter"></div>
+                        
+                        <!-- Bottom Sub-Section: Schema Database Explorer -->
+                        <div class="ws-sidebar-section schema-section">
+                            <div class="ws-section-header">
+                                <h4>Schema Explorer</h4>
+                            </div>
+                            <div class="ws-search-box">
+                                <input type="text" id="schema-search" placeholder="Filter tables/columns...">
+                            </div>
+                            <div class="schema-tree-container" id="schema-tree">
+                                <div class="tree-placeholder">Database disconnected. Connect to load schema tables.</div>
+                            </div>
+                        </div>
+                    </aside>
+                    
+                    <!-- Center/Right Workbench Editor & Grid Split -->
+                    <div class="workspace-workbench">
+                        
+                        <!-- Top Workbench: Monaco Editor Panel -->
+                        <div class="workbench-top-panel" id="editor-panel-wrapper">
+                            <header class="workspace-editor-header">
+                                <div class="query-title-area">
+                                    <span id="active-question-id" class="q-id-pill">Q1</span>
+                                    <h3 id="active-question-title">Select Question</h3>
+                                </div>
+                                <div class="editor-actions">
+                                    <button id="btn-load-solution" class="btn btn-secondary" title="Load solution query template">
+                                        <svg viewBox="0 0 16 16" class="btn-icon-svg" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-1.35 3H7.857a2.857 2.857 0 0 1-2.857-2.857c0-1.578 1.28-2.857 2.857-2.857H13.5a.5.5 0 0 0 0-1H7.857A3.857 3.857 0 0 0 4 7.143c0 2.13 1.727 3.857 3.857 3.857h2.327L9.12 12.11a.25.25 0 0 0 .192.41h3.932a.25.25 0 0 0 .192-.41l-1.966-2.36a.25.25 0 0 0-.384 0z"/></svg>
+                                        Load Solution
+                                    </button>
+                                    <button id="btn-clear-editor" class="btn btn-secondary" title="Clear current SQL">
+                                        Clear
+                                    </button>
+                                    <button id="btn-save" class="btn btn-secondary" title="Save query draft (locally)">
+                                        Save Draft
+                                    </button>
+                                    <button id="btn-run" class="btn btn-success" title="Execute Query (Ctrl+Enter)">
+                                        <svg viewBox="0 0 16 16" class="btn-icon-svg" fill="currentColor"><path d="M3 2.697L13.396 8 3 13.303V2.697z"/></svg>
+                                        Run Query
+                                    </button>
+                                </div>
+                            </header>
+                            
+                            <!-- Objective description card -->
+                            <div class="exercise-objective-bar">
+                                <strong>Objective:</strong>
+                                <span id="active-question-desc">Select an exercise on the left to display description instructions.</span>
+                            </div>
+                            
+                            <!-- Monaco Editor Target -->
+                            <div class="editor-editor-container">
+                                <div id="editor-container"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Resizable Horizontal Splitter Bar -->
+                        <div class="workspace-splitter" id="workbench-splitter"></div>
+                        
+                        <!-- Bottom Workbench: Results panel -->
+                        <div class="workbench-bottom-panel" id="results-panel-wrapper">
+                            <header class="workspace-results-header">
+                                <div class="results-tabs">
+                                    <button class="results-tab active" data-result-tab="grid">Results Grid</button>
+                                    <button class="results-tab" data-result-tab="logs">Execution Log</button>
+                                    <button class="results-tab" data-result-tab="errors" id="tab-btn-errors" style="display: none;">Errors & Details</button>
+                                </div>
+                                <div class="results-meta">
+                                    <span id="meta-status" class="meta-item">Status: <span>Idle</span></span>
+                                    <span id="meta-rows" class="meta-item">Rows: <span>0</span></span>
+                                    <span id="meta-time" class="meta-item">Time: <span>0ms</span></span>
+                                    <button id="btn-copy-selection" class="btn btn-tiny" style="display: none;">Copy Table Cells</button>
+                                    <button id="btn-export-csv" class="btn btn-tiny" style="display: none;">Export CSV</button>
+                                </div>
+                            </header>
+                            
+                            <div class="results-tab-body">
+                                <!-- Tab 1: Grid Table -->
+                                <div id="result-tab-grid" class="result-tab-content active">
+                                    <div class="grid-placeholder">No query results dataset. Run a successful query.</div>
+                                </div>
+                                
+                                <!-- Tab 2: Logs Output -->
+                                <div id="result-tab-logs" class="result-tab-content">
+                                    <pre id="execution-logs-output" class="logs-container">No execution logs yet.</pre>
+                                </div>
+
+                                <!-- Tab 3: Detailed Error Panel -->
+                                <div id="result-tab-errors" class="result-tab-content">
+                                    <div class="error-panel-box">
+                                        <div class="error-panel-header">
+                                            <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/></svg>
+                                            <strong>Query Execution Error</strong>
+                                        </div>
+                                        <div class="error-panel-body">
+                                            <div class="error-item"><span>Error Message:</span> <pre id="error-box-msg">-</pre></div>
+                                            <div class="error-item"><span>Error Location:</span> <pre id="error-box-location">Unknown</pre></div>
+                                            <div class="error-item"><span>Troubleshooting Hints:</span> <p id="error-box-hints">-</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: EXPORT REPORT -->
+            <div id="view-export-panel" class="tab-view">
+                <header class="view-header">
+                    <div class="header-title">
+                        <h2>Excel Report Builder</h2>
+                        <span class="header-subtitle">Compile active workbook reports</span>
+                    </div>
+                </header>
+                <div class="view-body scrollable">
+                    <div class="export-workspace-container">
+                        <div class="export-action-card">
+                            <h3>Excel Compiler Settings</h3>
+                            <p>Generate a styled workbook sheet by consolidating all queries with a successful run status (marked with ✓). Empty or unexecuted queries will be automatically skipped.</p>
+                            
+                            <div class="export-meta-card">
+                                <div class="export-meta-row">
+                                    <span>Output File Location:</span>
+                                    <strong id="export-path">output/sql_exercise_outputs.xlsx</strong>
+                                </div>
+                                <div class="export-meta-row">
+                                    <span>Sheets Pending Export:</span>
+                                    <strong id="export-active-count">0 / 15 sheets</strong>
+                                </div>
+                            </div>
+
+                            <button id="btn-export-excel" class="btn btn-primary btn-large">Compile & Save Excel Document</button>
+                            
+                            <div class="export-progress-panel" style="display: none;">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" id="export-progress-fill" style="width: 0%"></div>
+                                </div>
+                                <div class="export-feedback-msg" id="export-success-message" style="display: none;">
+                                    <strong>Success:</strong> Excel workbook exported successfully. Check the output directory path.
+                                </div>
+                                <div class="export-feedback-msg error" id="export-error-message" style="display: none;">
+                                    <strong>Failure:</strong> Could not save Excel file. Check logs for details.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="export-details-card">
+                            <h3>Compilation Console Log</h3>
+                            <pre class="logs-container" id="export-log-output">Console ready. Click 'Compile & Save Excel Document' to initiate export.</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: SETTINGS -->
+            <div id="view-settings" class="tab-view">
+                <header class="view-header">
+                    <div class="header-title">
+                        <h2>Workspace Settings</h2>
+                        <span class="header-subtitle">Customize application behavior and visuals</span>
+                    </div>
+                </header>
+                <div class="view-body scrollable">
+                    <div class="settings-section">
+                        <h3>Visual Appearance</h3>
+                        <div class="settings-option">
+                            <div class="option-info">
+                                <strong>Color Palette Theme</strong>
+                                <span>Switch between Light Mode and Dark Mode</span>
+                            </div>
+                            <div class="option-control">
+                                <select id="setting-theme">
+                                    <option value="dark">Dark Theme (DataGrip/VSCode inspired)</option>
+                                    <option value="light">Light Theme (Clean Studio inspired)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-option">
+                            <div class="option-info">
+                                <strong>Editor Font Size</strong>
+                                <span>Change text sizing in Monaco SQL workbench</span>
+                            </div>
+                            <div class="option-control">
+                                <select id="setting-fontsize">
+                                    <option value="12">12px</option>
+                                    <option value="13" selected>13px</option>
+                                    <option value="14">14px</option>
+                                    <option value="16">16px</option>
+                                    <option value="18">18px</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Reset & Maintenance</h3>
+                        <div class="settings-option">
+                            <div class="option-info">
+                                <strong>Clear Local Session</strong>
+                                <span>Deletes saved SQL drafts cached locally in current browser context</span>
+                            </div>
+                            <div class="option-control">
+                                <button id="btn-reset-session" class="btn btn-secondary">Clear Drafts Session</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: ABOUT -->
+            <div id="view-about" class="tab-view">
+                <header class="view-header">
+                    <div class="header-title">
+                        <h2>About SQL Studio Workspace</h2>
+                        <span class="header-subtitle">Application release metadata</span>
+                    </div>
+                </header>
+                <div class="view-body scrollable">
+                    <div class="about-card">
+                        <h3>Premium SQL Automation Client</h3>
+                        <p>This utility connects directly to a PostgreSQL relational database server to run structured exercise queries (Q1 to Q15), capture schemas, format records datasets, and export final reports directly to Excel spreadsheets.</p>
+                        
+                        <hr>
+                        
+                        <div class="about-details-table">
+                            <div class="about-row"><span>App Version:</span> <strong>v2.1.0-Desktop</strong></div>
+                            <div class="about-row"><span>Environment:</span> <strong>PostgreSQL 12+ / Python Flask / Monaco Editor Core</strong></div>
+                            <div class="about-row"><span>Design Language:</span> <strong>DBeaver / DataGrip IDE Desktop Layout</strong></div>
+                            <div class="about-row"><span>Target Database:</span> <strong>dvdrental (PostgreSQL Sample DB)</strong></div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <p class="credits-text">Crafted for database administrators, data analysts, and engineering teams to automate reporting deliverables.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
