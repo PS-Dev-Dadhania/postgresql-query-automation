@@ -49,43 +49,44 @@ SQL/
 ## Architecture
 ```mermaid
 flowchart TD
-    A[User runs `python main.py`] --> B[Load .env via config.py]
-    B --> C[Validate config]
-    C --> D[db.get_db_connection()]
-    D --> E[Iterate over queries (queries.py)]
-    E --> F[Execute each statement with psycopg2]
-    F --> G[Fetch headers & rows from final SELECT]
-    G --> H[excel_export.export_query_results_to_sheet()]
-    H --> I[Styled worksheet added to workbook]
-    I --> J{All queries processed?}
-    J -->|Yes| K[excel_export.save_workbook()]
-    K --> L[Report summary on console & log]
+    A["Run main.py"] --> B["Load Environment Variables"]
+    B --> C["Validate Configuration"]
+    C --> D["Open Database Connection"]
+    D --> E["Iterate Over Queries"]
+    E --> F["Execute SQL Statements"]
+    F --> G["Fetch Headers and Rows"]
+    G --> H["Export Query Results to Sheet"]
+    H --> I["Style Worksheet Cells"]
+    I --> J{"All Queries Processed?"}
+    J -->|Yes| K["Save Styled Workbook"]
+    K --> L["Display Execution Summary"]
     J -->|No| E
 ```
 
 ## Execution Workflow
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Script as main.py
-    participant Config as config.py
-    participant DB as db.py
-    participant Queries as queries.py
-    participant Excel as excel_export.py
-    User->>Script: python main.py
-    Script->>Config: load .env
-    Config-->>Script: validated config
-    Script->>DB: get_db_connection()
-    DB-->>Script: connection
-    loop for each query
-        Script->>Queries: get query definition
-        Queries-->>Script: sql statements
-        Script->>DB: execute statements
-        DB-->>Script: result set (headers, rows)
-        Script->>Excel: export_query_results_to_sheet()
+    participant User as "User"
+    participant Script as "Main Script"
+    participant Config as "Config Manager"
+    participant DB as "Database Connection"
+    participant Queries as "Queries Registry"
+    participant Excel as "Excel Export"
+
+    User->>Script: Run main.py
+    Script->>Config: Load environment variables
+    Config-->>Script: Configuration validated
+    Script->>DB: Open database connection
+    DB-->>Script: Connection active
+    loop For each query
+        Script->>Queries: Get query definition
+        Queries-->>Script: SQL statements
+        Script->>DB: Execute SQL statements
+        DB-->>Script: Results fetched
+        Script->>Excel: Export results to sheet
     end
-    Script->>Excel: save_workbook()
-    Script->>User: print summary
+    Script->>Excel: Save workbook
+    Script->>User: Display execution summary
 ```
 
 ## Installation
